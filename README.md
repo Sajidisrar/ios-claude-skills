@@ -1,62 +1,65 @@
-# iOS Claude Code Skills
+# iOS Claude Skills
 
-A collection of 17 [Claude Code Skills](https://docs.claude.com/en/docs/claude-code/skills) for iOS (Swift/SwiftUI) development — covering the day-to-day workflow from writing a feature to shipping a release.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Skills](https://img.shields.io/badge/skills-29-brightgreen)](#1-build--writing-a-feature)
 
-Each skill is a self-contained folder (`SKILL.md`, plus `references/` where needed). Claude Code reads a skill's frontmatter to decide when it's relevant, then follows the instructions inside when it's invoked.
+A collection of 29 [Claude Code Skills](https://docs.claude.com/en/docs/claude-code/skills) for iOS/Swift development — lifecycle workflows (feature work, quality, review, shipping) plus skills for the core Apple frameworks nearly every real app touches (Swift concurrency, SwiftData, StoreKit, and more).
 
-> **Welcome to fork this.** These were extracted and genericized from real project skills — the opinions (architecture, testing style, offline-first patterns) are one team's conventions, not universal law. If your project does things differently, fork it, edit the `SKILL.md` files to match, delete what you don't need, and add what's missing (see [Gaps](#gaps--not-yet-covered) below for ideas). PRs that add a missing skill, fix a stale instruction, or genericize something further are welcome.
+```
+  BUILD ──▶ QUALITY ──▶ REVIEW ──▶ SHIP
+    │                                        FRAMEWORKS & PLATFORM
+    └── feature work, screens,               (used wherever relevant —
+        offline writes, API calls             not stage-bound: concurrency,
+                                               SwiftData, StoreKit, CloudKit,
+                                               widgets, push, privacy, HIG…)
+```
+
+Each skill is a self-contained folder (`SKILL.md`, plus `references/` where needed) directly under `skills/` — one flat directory, so every supported tool's native skill discovery finds it without translation. Claude Code (and every other tool below) reads a skill's frontmatter to decide when it's relevant, then follows the instructions inside when it's invoked.
+
+**Welcome to fork this.** The opinions baked in (architecture, testing style, which Apple APIs to reach for) are one team's conventions and one author's judgment calls, not universal law. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add a skill, add tool support, or adapt one to your own project.
+
+## Works with
+
+Every tool below reads the same `SKILL.md` files — no per-tool content translation, just a different discovery path.
+
+| Tool | Install | Setup detail |
+|---|---|---|
+| **Claude Code** | `/plugin marketplace add Sajidisrar/ios-claude-skills` then `/plugin install ios-claude-skills` — or `install.sh` below | — |
+| **Cursor** | `curl -fsSL .../install.sh \| bash -s -- --tool cursor` | [docs/cursor-setup.md](docs/cursor-setup.md) |
+| **GitHub Copilot** | `curl -fsSL .../install.sh \| bash -s -- --tool copilot` | [docs/copilot-setup.md](docs/copilot-setup.md) |
+| **Gemini CLI** | `gemini skills install https://github.com/Sajidisrar/ios-claude-skills.git --path skills` | [docs/gemini-cli-setup.md](docs/gemini-cli-setup.md) |
+| **OpenAI Codex CLI** | `codex plugin marketplace add Sajidisrar/ios-claude-skills` then `codex plugin add ios-claude-skills@ios-claude-skills` | [docs/codex-setup.md](docs/codex-setup.md) |
+| **OpenCode** | Reads `skills/` natively — point it at a clone of this repo, no setup | — |
 
 ## Install
 
-### Option A — all of them, every project (user-level)
+One-liner, defaults to Claude Code project-level:
 
 ```bash
-git clone <this-repo-url> ~/Documents/Skills   # or wherever you keep it
-cp -R ~/Documents/Skills/*/*/ ~/.claude/skills/
-```
-
-That flattens groups `1-build`, `2-quality`, `3-review`, `4-ship` into individual skill folders directly under `~/.claude/skills/<skill-name>/`, so every Claude Code session on your machine sees all 17 skills regardless of project.
-
-### Option B — just one project (project-level, recommended to start)
-
-```bash
-mkdir -p .claude/skills
-cp -R /path/to/Skills/1-build/ios-feature-module .claude/skills/
-```
-
-Copy in only the skills your project actually needs. Project-level skills live in that project's `.claude/skills/` and are only visible inside it — nothing leaks into other repos.
-
-### Option C — pick and choose with a script
-
-```bash
-#!/usr/bin/env bash
-# install-skills.sh <dest> <skill-name> [skill-name...]
-dest="$1"; shift
-mkdir -p "$dest"
-for name in "$@"; do
-  found=$(find /path/to/Skills -maxdepth 2 -type d -name "$name")
-  [ -n "$found" ] && cp -R "$found" "$dest/" && echo "installed $name"
-done
+curl -fsSL https://raw.githubusercontent.com/Sajidisrar/ios-claude-skills/main/install.sh | bash
 ```
 
 ```bash
-./install-skills.sh ~/.claude/skills ios-bug-triage ios-secure-review ios-unit-tests
+# A specific tool, or every project on your machine instead of just one, or one skill only:
+curl -fsSL .../install.sh | bash -s -- --tool cursor
+curl -fsSL .../install.sh | bash -s -- --tool claude --scope user
+curl -fsSL .../install.sh | bash -s -- --skill ios-bug-triage
 ```
 
-After copying, restart Claude Code (or start a new session) so it picks up the new skills.
+Run `install.sh --help` for the full flag list. After installing, restart your tool (or start a new session) so it picks up the new skills.
 
 ## How to use a skill
 
-Most skills here trigger automatically — Claude Code reads each `SKILL.md`'s `description` and pulls the skill in when your request matches (e.g. asking "why is this crashing" can trigger `ios-bug-triage` on its own).
+Most skills trigger automatically — each tool reads a skill's `description` and pulls it in when your request matches (e.g. asking "why is this crashing" can trigger `ios-bug-triage` on its own).
 
-Two skills — `ios-precommit` and `ios-commit` — are marked `disable-model-invocation: true`, meaning they **only** run when you explicitly invoke them with a slash command:
+Two skills — `ios-precommit` and `ios-commit` — are marked `disable-model-invocation: true` in Claude Code, meaning they **only** run there on an explicit slash command:
 
 ```
 /ios-precommit
 /ios-commit
 ```
 
-You can invoke any skill explicitly the same way, even ones that would also trigger automatically — useful when you want to be certain which skill runs.
+That field is Claude Code-specific; other tools ignore it and will auto-trigger these two like any other skill based on their description — see each tool's setup doc under `docs/` for the exact caveat. You can invoke any skill explicitly by name on any tool, even ones that also trigger automatically, when you want to be certain which one runs.
 
 ## Examples
 
@@ -72,78 +75,114 @@ You can invoke any skill explicitly the same way, even ones that would also trig
 ```
 → reviews your actual `git diff` (not the whole project), reports findings as 🔴/🟠/🟡/🔵/🟢 with file:line evidence, and ends with exactly one of ❌ DO NOT COMMIT / ⚠️ REVIEW RECOMMENDED / ✅ READY TO COMMIT.
 
+**"We need to upgrade this module to Swift 6."**
+→ triggers `ios-swift6-concurrency-migration`. It has you surface the concurrency warnings under Swift 5 first (rather than flipping the language mode blind), works leaf-modules-first, and treats every new `@preconcurrency`/`@unchecked Sendable` as needing a one-line justification, not a silencer.
+
 **"Add Alamofire for networking."**
 → triggers `ios-dependency-assessment`. Before writing any code, it asks what problem Alamofire actually solves that the platform or the existing networking layer doesn't, checks licence/maintenance/transitive-dependency risk, and recommends with the trade-off stated explicitly — including "write it ourselves" as a valid answer.
 
-**"The job list screen feels janky when scrolling."** *(swap in your own feature's name)*
+**"The list screen feels janky when scrolling."**
 → triggers `ios-performance-tuning`. It asks you to measure with Instruments first, checks the usual causes for this architecture (redundant fetches, whole-list invalidation, formatter churn), and requires a before/after number — "it feels better" isn't a result it accepts.
 
 ## 1. Build — writing a feature
 
-| Skill | Purpose |
-|---|---|
-| `ios-feature-module` | Scaffold a complete feature module — model, endpoints, repository, view models, screens, tests |
-| `ios-api-endpoint` | Add or change a single API call — endpoint, wire models, repository method, tests |
-| `ios-api-contract-migration` | Adapt the app to a changed backend contract (renamed/removed fields, new error shapes, versioned rollout) |
-| `ios-swiftui-screen` | Build or change a SwiftUI screen — loading/empty/error states, forms, navigation, accessibility |
-| `ios-offline-write` | Make create/update/delete work offline — outbox queueing, optimistic records, replay on reconnect |
+| Skill | Purpose | Triggers on |
+|---|---|---|
+| `ios-feature-module` | Scaffold a complete feature module — model, endpoints, repository, view models, screens, tests | Adding a new feature, screen set, resource or CRUD area |
+| `ios-api-endpoint` | Add or change a single API call — endpoint, wire models, repository method, tests | Wiring up a new backend call or changing a request/response shape |
+| `ios-api-contract-migration` | Adapt the app to a changed backend contract (renamed/removed fields, new error shapes, versioned rollout) | The API changed — renamed fields, new error shape, a version bump |
+| `ios-swiftui-screen` | Build or change a SwiftUI screen — loading/empty/error states, forms, navigation, accessibility | Adding/changing a screen, or fixing loading/empty/error states |
+| `ios-offline-write` | Make create/update/delete work offline — outbox queueing, optimistic records, replay on reconnect | A save must survive a dropped connection |
 
 ## 2. Quality — making sure it actually works
 
-| Skill | Purpose |
-|---|---|
-| `ios-unit-tests` | Write or extend unit tests using the codebase's stubs/spies and test doubles |
-| `ios-bug-triage` | Diagnose and fix a bug or crash methodically — reproduce, write a failing test, fix the cause |
-| `ios-concurrency-audit` | Audit/fix Swift Concurrency issues — actor isolation, Sendable, cancellation, data races |
-| `ios-performance-tuning` | Diagnose and fix performance problems — slow launch, jank, redundant network calls, memory growth |
-| `ios-accessibility-audit` | Audit/fix accessibility — VoiceOver, Dynamic Type, contrast, hit targets, focus order |
+| Skill | Purpose | Triggers on |
+|---|---|---|
+| `ios-unit-tests` | Write or extend unit tests using the codebase's stubs/spies and test doubles | Adding tests, improving coverage, a bug needs a regression test |
+| `ios-bug-triage` | Diagnose and fix a bug or crash methodically — reproduce, write a failing test, fix the cause | A crash log, bug report, or "why is this not working" |
+| `ios-concurrency-audit` | Audit/fix Swift Concurrency issues — actor isolation, Sendable, cancellation, data races | A crash/warning involves threading, or reviewing async code |
+| `ios-performance-tuning` | Diagnose and fix performance problems — slow launch, jank, redundant network calls, memory growth | A screen feels slow, stutters, or a request fires repeatedly |
+| `ios-accessibility-audit` | Audit/fix accessibility — VoiceOver, Dynamic Type, contrast, hit targets, focus order | Checking/improving accessibility, or a pre-release screen review |
 
 ## 3. Review — judgment calls before it ships
 
-| Skill | Purpose |
-|---|---|
-| `ios-secure-review` | Pre-commit review against architecture, secure-coding and compliance rules |
-| `ios-dependency-assessment` | Assess a third-party package/SDK before adding it, as a supplier decision |
-| `ios-refactor` | Refactor without changing behaviour — extract types, split files, remove duplication |
+| Skill | Purpose | Triggers on |
+|---|---|---|
+| `ios-secure-review` | Pre-commit review against architecture, secure-coding and compliance rules | Reviewing a diff before a pull request |
+| `ios-dependency-assessment` | Assess a third-party package/SDK before adding it, as a supplier decision | Evaluating or adding a third-party package/SDK |
+| `ios-refactor` | Refactor without changing behaviour — extract types, split files, remove duplication | Cleaning up, splitting, or modernising existing code |
 
 ## 4. Ship — commit, PR, release
 
-| Skill | Purpose |
-|---|---|
-| `ios-release-prep` | Prepare a release — version/build numbers, archive, TestFlight, release notes, pre-release checks |
-| `ios-commit-and-pr` | Write commits and PR descriptions to a team's conventions |
-| `ios-precommit` | Developer pre-commit review of the current diff, with a commit/no-commit decision (explicit `/ios-precommit` only) |
-| `ios-commit` | Write the permanent audit record for a commit, reconciling it with `ios-precommit`'s review (explicit `/ios-commit` only) |
+| Skill | Purpose | Triggers on |
+|---|---|---|
+| `ios-release-prep` | Prepare a release — version/build numbers, archive, TestFlight, release notes, pre-release checks | Cutting a release, bumping the version |
+| `ios-commit-and-pr` | Write commits and PR descriptions to a team's conventions | Committing, writing a commit message, or describing a PR |
+| `ios-precommit` | Developer pre-commit review of the current diff, with a commit/no-commit decision | Explicit `/ios-precommit`, before committing |
+| `ios-commit` | Write the permanent audit record for a commit, reconciling it with `ios-precommit`'s review | Explicit `/ios-commit`, right after a successful commit |
 
 `ios-precommit` and `ios-commit` are a matched pair: the first reviews a pending diff and writes a temporary record; the second finalizes that record once the diff is actually committed, matching it by content fingerprint rather than assuming "the last review" is the right one.
 
 Both of those two also mention an `ios-code-review` skill ("a separate CTO/half-yearly project assessment — do not confuse the two") purely as a contrast to explain their own scope. **That skill is not part of this collection** — it's referenced from the source project this was extracted from, not something you need to go find.
 
-## Gaps — not yet covered
+## 5. Frameworks & Platform
 
-This set covers feature work, quality, review and shipping for a single iOS app target. Noticeably absent — good first contributions if you want to extend this collection:
+These are framework-scoped rather than lifecycle-stage-scoped — reach for the one that matches what you're integrating, at whatever point in the build/quality/review/ship cycle it comes up.
+
+| Skill | Purpose | Triggers on |
+|---|---|---|
+| `ios-swift6-concurrency-migration` | Upgrade a module to Swift 6 language mode — Sendable audits, actor-isolation fixes, incremental per-module rollout | Migrating to Swift 6, fixing new Sendable/isolation errors |
+| `ios-swift-testing-migration` | Adopt Swift Testing (`@Test`, `@Suite`, `#expect`) alongside or instead of XCTest | Migrating tests to Swift Testing, adding parameterized tests |
+| `ios-swiftdata` | SwiftData schema design, relationships, `VersionedSchema` migrations | Adding SwiftData persistence, migrating a schema |
+| `ios-combine-patterns` | Combine in a codebase that predates/mixes with async-await — bridging, retain-cycle traps | Fixing a Combine leak, bridging Combine into async code |
+| `ios-coreml-apple-intelligence` | Core ML integration and the Foundation Models framework (Apple Intelligence) | Adding an ML feature, using Core ML or Foundation Models |
+| `ios-storekit-subscriptions` | StoreKit 2 in-app purchases and subscriptions — purchase flow, verification, renewal | Adding IAP, implementing a paywall, handling renewal |
+| `ios-privacy-compliance` | Privacy manifest, required-reason APIs, permission strings, App Store privacy answers | Adding a privacy manifest, declaring a required-reason API |
+| `ios-deep-linking` | Universal Links and custom URL schemes — associated domains, routing, testing | Adding deep linking, handling a Universal Link |
+| `ios-cloudkit-sync` | Sync via CloudKit — record zones, push-driven sync, conflict resolution | Adding iCloud sync, debugging a sync conflict |
+| `ios-widgetkit-live-activities` | Widgets and Live Activities — timeline design, deep linking, push updates | Adding a widget, building a Live Activity |
+| `ios-push-and-background-tasks` | Push notifications and `BackgroundTasks` scheduling | Adding push notifications, scheduling background work |
+| `ios-latest-os-adoption` | Check a screen against current HIG and the newest OS's design language/APIs | A new iOS version shipped; auditing against current HIG |
+
+This category closes the "basic requirements" gap this repo had against comparable Apple-platform skill collections (Axiom, rshankras/claude-code-apple-skills, Prisma-Labs-Dev/apple-skills) — those are **framework-reference** packs (one skill per Apple framework); the 1–4 categories above are **workflow-process** (one skill per dev-lifecycle stage). Both matter; this repo now has both.
+
+## Gaps — not yet covered
 
 - **CI/CD** — no skill for pipeline config (Fastlane, GitHub Actions/Bitrise/Xcode Cloud lanes).
 - **Localization/i18n** — no skill for adding strings, checking translation coverage, or RTL layout.
-- **App Store compliance** — `ios-release-prep` covers the mechanics (version bumps, TestFlight) but nothing audits privacy manifests, permission usage strings, or App Store review guidelines before submission.
 - **PR *review*** — `ios-precommit`/`ios-secure-review` cover reviewing your *own* diff before committing; nothing covers reviewing a teammate's already-open PR.
 - **Incident/hotfix path** — `ios-release-prep` assumes a normal cadence; no fast-path skill for "ship a one-line fix to production now."
-- **Persistence/schema migration** — `ios-offline-write` covers the outbox pattern but not Core Data/SwiftData schema versioning or migration.
-- **Observability** — `ios-performance-tuning` is reactive (fix what's slow); nothing covers adding crash reporting, analytics events, or structured logging conventions proactively.
-- **Extensions/other targets** — nothing for widgets, App Clips, watchOS companions, or notification service extensions.
+- **Extensions beyond widgets** — App Clips, watchOS companions, notification service extensions aren't covered.
+- **ASO/App Store marketing** — keyword optimization, screenshots, store listing copy. Deliberately out of scope: this collection is engineering workflows, not marketing.
 
-Whether to fill these in depends on what your own project actually needs — not every app has an extension target or a hotfix process worth automating.
+**Not included, on purpose:** agent personas, an eval test-case harness, session hooks, a published npm/npx installer package. These show up in some comparable repos; adding them would be a meaningfully different kind of commitment (ongoing package maintenance, a much larger file surface) than this collection currently takes on.
+
+## Project structure
+
+```
+ios-claude-skills/
+├── .claude-plugin/       # Claude Code plugin + marketplace manifest
+├── .codex-plugin/        # Codex plugin manifest
+├── .agents/plugins/      # Codex-ecosystem marketplace entry
+├── plugin.json           # generic fallback for other plugin-aware hosts
+├── skills/               # all 29 skills, flat — skills/<name>/SKILL.md
+├── docs/                 # per-tool setup guides
+├── install.sh            # curl | bash installer
+├── CONTRIBUTING.md
+├── AGENTS.md             # meta-instructions for contributors to this repo
+└── README.md
+```
 
 ## Adapting these to your project
 
-These were written against one real iOS codebase (Swift Concurrency, SwiftUI, iOS 16 floor, no third-party dependencies, an outbox-based offline-write pattern). Expect to edit:
+These were written against one real iOS codebase (Swift Concurrency, SwiftUI, iOS 16 floor, an outbox-based offline-write pattern). Expect to edit:
 
 - **Architecture specifics** — layer names (`Core`/`Features`), protocol names (`APIClient`, `CacheStore`, `Outbox`), and the `Features/Widgets` reference-implementation pointer in `ios-feature-module` all assume a particular project shape. Point them at your own.
-- **Ticket/task linkage** — `ios-commit-and-pr` assumes a `TASK-123`-style ticket reference; swap in your own tracker's convention (Jira, Linear, GitHub Issues).
-- **Compliance gates** — `ios-secure-review` and `ios-commit-and-pr` reference a generic "AI-code policy" and "data-handling" section where the original had specific internal policy codes. Replace with your own, or delete if you don't have one.
-- **iOS version floor** — several skills assume iOS 16 as the minimum target and ban iOS 17+ APIs accordingly. Update if your deployment target is different.
+- **Ticket/task linkage** — `ios-commit-and-pr` assumes a `TASK-123`-style ticket reference; swap in your own tracker's convention.
+- **Compliance gates** — `ios-secure-review` and `ios-commit-and-pr` reference a generic "AI-code policy" where the original had specific internal policy codes. Replace with your own, or delete if you don't have one.
+- **iOS version floor** — several lifecycle skills assume iOS 16 as the minimum target and ban iOS 17+ APIs accordingly. Update if your deployment target is different.
 
 ## Notes
 
-- All sample/test data and naming in these skills is intentionally generic (`Widget`-style placeholders) — no real client, product or personal data.
-- Each `SKILL.md` ends with a verification checklist. These exist so Claude reports what it actually checked rather than asserting "done" — keep that pattern if you edit or extend a skill.
+- All sample/test data and naming in these skills is intentionally generic (`Widget`-style placeholders, `example.com`) — no real client, product or personal data.
+- Each `SKILL.md` ends with a verification checklist. These exist so an agent reports what it actually checked rather than asserting "done" — keep that pattern if you edit or extend a skill.

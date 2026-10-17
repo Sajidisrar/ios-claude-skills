@@ -1,0 +1,25 @@
+{
+  "name": "ios-claude-skills",
+  "version": "1.0.0",
+  "description": "Claude Code skills for iOS/Swift development, covering the full build-quality-review-ship lifecycle plus core Apple frameworks.",
+  "author": {
+    "name": "Sajid Israr",
+    "url": "https://github.com/Sajidisrar"
+  },
+  "homepage": "https://github.com/Sajidisrar/ios-claude-skills",
+  "repository": "https://github.com/Sajidisrar/ios-claude-skills",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "iOS Claude Skills",
+    "shortDescription": "iOS/Swift engineering workflows and Apple-framework skills for AI coding agents.",
+    "longDescription": "29 skills for iOS/Swift development: feature-module scaffolding, API work, offline writes, testing, bug triage, concurrency and performance audits, accessibility, secure review, dependency assessment, refactoring, release prep, commit/PR conventions, and Apple-framework skills (Swift 6 concurrency migration, Swift Testing, SwiftData, Combine, Core ML, StoreKit, privacy compliance, deep linking, CloudKit, WidgetKit/Live Activities, push/background tasks, HIG and latest-OS adoption).",
+    "developerName": "Sajid Israr",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ]
+  }
+}

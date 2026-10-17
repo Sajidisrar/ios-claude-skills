@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "ios-claude-skills",
+  "description": "Claude Code skills for iOS/Swift development — lifecycle workflows plus Apple-framework skills.",
+  "owner": {
+    "name": "Sajid Israr",
+    "url": "https://github.com/Sajidisrar"
+  },
+  "plugins": [
+    {
+      "name": "ios-claude-skills",
+      "version": "1.0.0",
+      "source": {
+        "source": "github",
+        "repo": "Sajidisrar/ios-claude-skills"
+      },
+      "description": "29 skills covering iOS feature work, quality, review, shipping, and core Apple frameworks (Swift concurrency, SwiftData, StoreKit, WidgetKit, and more).",
+      "homepage": "https://github.com/Sajidisrar/ios-claude-skills",
+      "license": "MIT",
+      "keywords": ["ios", "swift", "swiftui", "skills", "agents", "apple"]
+    }
+  ]
+}
