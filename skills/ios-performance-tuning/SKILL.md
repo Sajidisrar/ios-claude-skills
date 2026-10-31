@@ -19,6 +19,14 @@ nothing.
 | Memory growth | Instruments → Allocations and Leaks; retain cycles in closures |
 | Battery | Xcode Energy gauge; look at sync frequency and monitor callbacks |
 
+**Field data (MetricKit).** For what real users experience, use MetricKit. On iOS 27 the
+Swift-first `MetricManager` delivers `MetricReport` and `DiagnosticReport` values through
+an `AsyncStream`; the original `MXMetricManager`/`MXMetricPayload` APIs still work but are
+no longer recommended for new code. Keep the old subscriber for OS versions before 27. If
+the app references `ScrollHitchTimeMetric` or `scrollHitchTime(_:)`, recompile with the
+iOS 27 SDK and move to `HitchTimeMetric` — otherwise it crashes at launch on iOS 27.
+Xcode 27's Organizer also adds an Insights Overview of regressions.
+
 Note the number before and after. "It feels better" is not a result.
 
 ## The usual causes in this architecture

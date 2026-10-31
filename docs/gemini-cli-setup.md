@@ -37,7 +37,7 @@ If you want a specific skill loaded as persistent context for every prompt (rath
 cat /path/to/ios-claude-skills/skills/ios-secure-review/SKILL.md >> GEMINI.md
 ```
 
-Use skills (on-demand) for most of this collection — 33 skills loaded persistently would eat your context budget for no benefit. `GEMINI.md` is better reserved for the one or two conventions you want enforced every single turn.
+Use skills (on-demand) for most of this collection — 37 skills loaded persistently would eat your context budget for no benefit. `GEMINI.md` is better reserved for the one or two conventions you want enforced every single turn.
 
 ## A caveat: `disable-model-invocation`
 

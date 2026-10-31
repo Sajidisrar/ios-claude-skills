@@ -31,6 +31,32 @@ Two distinct frameworks live under this skill: **Core ML** (you supply/convert a
 - Guardrails are enforced by the system model itself (it can refuse or produce a flagged response) — handle that outcome explicitly in the UI rather than assuming every generation request succeeds with usable content.
 - Structured generation (asking the model to produce a value conforming to a `Generable` type) is preferable to asking for free text and parsing it yourself wherever the output needs to be machine-consumed — parsing free-form model output is its own source of silent failures.
 
+### 3a. Additions in iOS 27 (keep everything above for earlier OS versions)
+
+From Apple's WWDC26 iOS guide and the Xcode 27 / iOS 27 release notes. Gate each one with
+`if #available(iOS 27, *)` and keep the earlier path for older OS versions; check exact
+API names in the documentation before writing code.
+
+- **Any model behind one protocol.** Foundation Models adds a *Language Model protocol*:
+  the same session code can use Apple's on-device model, Private Cloud Compute, or a cloud
+  provider's model that conforms. Using a cloud model changes the privacy story in §4 —
+  inputs leave the device — so disclose it per feature.
+- **Multimodal prompts** — images alongside text.
+- **Vision tools** (text recognition, barcode reading) the model can call on-device.
+- **Dynamic Profiles** — swap model, tools and instructions within one continuous session.
+- **Private Cloud Compute** — next-generation Apple models at no cloud API cost for App
+  Store Small Business Program members under 2 million first-time downloads. Check
+  eligibility before designing around it.
+- **Evaluations framework** — test AI feature behaviour beyond unit tests (§5).
+- **Foundation Models instrument** in Xcode 27 — inspect instructions, prompts, responses,
+  token usage and inference performance.
+- **Core AI** — a new OS framework for loading, specialising and running *your own* models
+  on Apple silicon. Core ML remains supported; choose Core AI for new bring-your-own-model
+  work on iOS 27+, and keep Core ML for earlier OS versions.
+- **Background Neural Engine access** now needs the
+  `com.apple.developer.background-tasks.continued-processing.inference` entitlement, and
+  Neural Engine memory is attributed to your app (visible in Allocations).
+
 ## 4. Privacy framing — the actual differentiator
 
 Both frameworks run inference **on-device**: no request payload leaves the device for the inference itself. This matters for the privacy-manifest and App Store privacy answers this app gives (see `ios-privacy-compliance`) — on-device inference is not the same data-handling story as calling a server-side ML endpoint, and the privacy copy/consent flow should say which one a given feature actually does. Don't let marketing copy imply "on-device AI" for a feature that actually calls a backend model; don't let privacy disclosures imply "nothing leaves the device" for a feature that also logs inputs/outputs server-side for quality monitoring.

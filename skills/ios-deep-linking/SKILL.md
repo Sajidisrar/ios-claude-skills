@@ -18,6 +18,11 @@ Universal Links and custom URL schemes solve the same problem differently, and m
 
 Default to Universal Links for anything a link might be shared or clicked outside the app. Keep a custom scheme only as a fallback for contexts Universal Links can't reach, or where the "no app installed" case genuinely doesn't matter.
 
+**iOS 27 SDK:** `canOpenURL(_:)` is deprecated. Instead of checking first, open the URL and
+handle the failure in the completion. Keep existing `canOpenURL` code working for older
+deployment targets, but don't add new uses — and Universal Links remove the need for the
+check entirely.
+
 ## 2. Associated domains and the server side
 
 The app side is an entitlement:

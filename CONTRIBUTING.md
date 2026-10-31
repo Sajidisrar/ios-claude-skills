@@ -6,7 +6,7 @@ PRs that add a missing skill, fix a stale instruction, extend tool support, or g
 
 ## Adding a new skill
 
-Every skill lives at `skills/<kebab-case-name>/SKILL.md` and follows the same anatomy as the existing 33:
+Every skill lives at `skills/<kebab-case-name>/SKILL.md` and follows the same anatomy as the existing 37:
 
 1. **Frontmatter**: `name` (matches the directory name) and `description` — the description should state both *what* the skill does and *when* to use it, since that's what every supported tool uses for auto-discovery. Add `disable-model-invocation: true` only if the skill should run exclusively on an explicit invocation (see `ios-precommit`/`ios-commit` for the pattern — this field is Claude Code-specific; other tools ignore it, see the per-tool docs under `docs/`).
 2. **Body**: process-oriented instructions, not a reference dump. Put supporting detail that would bloat the main file into `references/*.md` and link to it.
@@ -17,9 +17,34 @@ Every skill lives at `skills/<kebab-case-name>/SKILL.md` and follows the same an
 ## Adding support for a new tool
 
 1. Add `docs/<tool>-setup.md` describing how that tool discovers skills natively (most tools now read the same `SKILL.md` format — check whether a translation layer is even needed before building one).
-2. If the tool needs a destination directory `install.sh` doesn't know about yet, add a case to its `--tool` table.
+2. If the tool needs a destination directory `install.sh` doesn't know about yet, add a case to its `--tool` table, and the same entry to `destinations` in `Plugins/InstallIOSSkills/plugin.swift`.
 3. Add a row to the README's "Works with" table.
 
 ## Removing or renaming a skill
 
 The plugin manifests (`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`) point at the whole `skills/` directory, and `install.sh`'s default install copies every subfolder — neither needs manual updates when a skill is added or removed. What *does* need a manual pass: the README's category tables, and any other skill's prose that happens to reference the renamed/removed one by name.
+
+## Versioning and releases
+
+The project uses [Semantic Versioning](https://semver.org/) with `vX.Y.Z` git tags. SwiftPM resolves versions from those tags, and plugin installs compare the manifest `version`, so both must agree.
+
+| Change | Bump |
+|---|---|
+| Fix wording or a stale instruction in a skill, fix the installer | patch (1.2.0 → 1.2.1) |
+| Add a skill, a tool or an install path | minor (1.2.0 → 1.3.0) |
+| Remove or rename a skill, or change an install command incompatibly | major (1.2.0 → 2.0.0) |
+
+Day to day, add a line under `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md) with each change. To release:
+
+1. Pick the version, then run `scripts/bump-version.sh X.Y.Z`. It updates all five manifests (`plugin.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`).
+2. In CHANGELOG.md, rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD`, add a fresh empty `[Unreleased]` above it, and update the compare links at the bottom.
+3. Merge to `main` through a pull request.
+4. Tag the merge commit and push the tag:
+   ```bash
+   git switch main && git pull
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+5. The `Release` workflow checks that every manifest says `X.Y.Z` and that CHANGELOG.md has a section for it, then publishes a GitHub Release with that section as the notes.
+
+Never move or delete a published tag — SwiftPM users have already resolved against it. Ship a new patch release instead.

@@ -90,6 +90,13 @@ await activity.end(activity.content, dismissalPolicy: .default)
 - End the activity explicitly once the thing it's tracking is actually finished — a Live Activity left running indefinitely after its real-world event ended is exactly the kind of "stale indicator" problem `staleDate` is meant to prevent, just permanently instead of temporarily.
 - There's a limit on how many Live Activities an app can have running at once and the system can end one early under memory/resource pressure — don't assume `end()` is the only way an activity's lifecycle terminates; handle `Activity.activityStateUpdates` reporting `.dismissed`/`.ended` from the system side too.
 
+## 4a. Additions in iOS 27
+
+Per Apple's WWDC26 iOS guide, widgets gain customization through App Intents and dynamic
+styling. Reuse the app's existing intents (`ios-app-intents-siri`) for configuration
+rather than adding a parallel configuration path, and gate new APIs with
+`if #available(iOS 27, *)` — the timeline guidance above still applies on every version.
+
 ## 5. Testing and debugging
 
 - Preview widgets with `#Preview` and multiple `WidgetPreviewContext` family sizes (`.systemSmall`, `.systemMedium`, etc.) rather than only testing the size you happened to build first — a layout that works in one family can clip or overflow in another.
