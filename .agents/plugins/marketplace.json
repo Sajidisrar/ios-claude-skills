@@ -7,7 +7,7 @@
     {
       "name": "ios-claude-skills",
       "version": "1.0.0",
-      "description": "29 skills covering iOS feature work, quality, review, shipping, and core Apple frameworks.",
+      "description": "33 skills covering iOS feature work, quality, review, shipping, and core Apple frameworks.",
       "source": {
         "source": "local",
         "path": "./"

@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "iOS Claude Skills",
     "shortDescription": "iOS/Swift engineering workflows and Apple-framework skills for AI coding agents.",
-    "longDescription": "29 skills for iOS/Swift development: feature-module scaffolding, API work, offline writes, testing, bug triage, concurrency and performance audits, accessibility, secure review, dependency assessment, refactoring, release prep, commit/PR conventions, and Apple-framework skills (Swift 6 concurrency migration, Swift Testing, SwiftData, Combine, Core ML, StoreKit, privacy compliance, deep linking, CloudKit, WidgetKit/Live Activities, push/background tasks, HIG and latest-OS adoption).",
+    "longDescription": "33 skills for iOS/Swift development: feature-module scaffolding, a git-synced project knowledge base, iOS↔Android porting, API work, offline writes, testing, bug triage, concurrency and performance audits, accessibility, design-comparison fixes, secure review, dependency assessment, refactoring, release prep, commit/PR conventions, and Apple-framework skills (Swift 6 concurrency migration, Swift Testing, SwiftData, Combine, Core ML, StoreKit, privacy compliance, deep linking, CloudKit, WidgetKit/Live Activities, push/background tasks, HIG and latest-OS adoption).",
     "developerName": "Sajid Israr",
     "category": "Productivity",
     "capabilities": [

@@ -14,7 +14,7 @@
         "source": "github",
         "repo": "Sajidisrar/ios-claude-skills"
       },
-      "description": "29 skills covering iOS feature work, quality, review, shipping, and core Apple frameworks (Swift concurrency, SwiftData, StoreKit, WidgetKit, and more).",
+      "description": "33 skills covering iOS feature work, quality, review, shipping, and core Apple frameworks (Swift concurrency, SwiftData, StoreKit, WidgetKit, and more).",
       "homepage": "https://github.com/Sajidisrar/ios-claude-skills",
       "license": "MIT",
       "keywords": ["ios", "swift", "swiftui", "skills", "agents", "apple"]

@@ -6,7 +6,7 @@ This file configures AI agents working on the [`Sajidisrar/ios-claude-skills`](h
 
 ## What this repo is
 
-A flat `skills/` directory of 29 Claude Code-format skills for iOS/Swift development: 17 lifecycle-workflow skills (feature work, quality, review, shipping — presented in the README under "Build/Quality/Review/Ship" though the directory itself has no category subfolders) plus 12 Apple-framework skills (Swift concurrency migration, SwiftData, StoreKit, and others — presented under "Frameworks & Platform").
+A flat `skills/` directory of 33 Claude Code-format skills for iOS/Swift development: 21 lifecycle-workflow skills (feature work, quality, review, shipping — presented in the README under "Build/Quality/Review/Ship" though the directory itself has no category subfolders) plus 12 Apple-framework skills (Swift concurrency migration, SwiftData, StoreKit, and others — presented under "Frameworks & Platform").
 
 ## Working on this repo
 

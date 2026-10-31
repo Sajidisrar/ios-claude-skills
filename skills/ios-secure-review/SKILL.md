@@ -93,3 +93,12 @@ second reviewer is required.
 For each finding: file and line, the rule it breaks, the concrete consequence,
 and the smallest fix. Separate "must fix before commit" from "worth doing". If
 you find nothing, say so in one line — do not pad the review.
+
+## Verification
+
+- [ ] Every section 1–7 was checked against the actual diff, not assumed; sections that
+      don't apply are named as not applicable.
+- [ ] Each finding has file and line, the rule, the consequence and the smallest fix.
+- [ ] "Must fix before commit" is separated from "worth doing".
+- [ ] The gate statement from section 8 appears in the summary, plus the second-reviewer
+      note if authentication, storage, transport or logging changed.
