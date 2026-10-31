@@ -33,6 +33,26 @@ Apple's Human Interface Guidelines change incrementally, not wholesale, each cyc
 - **Icons and symbology** — SF Symbols get new glyphs and rendering modes with new OS releases; a custom icon set doesn't automatically benefit, which is itself a cost worth weighing against brand consistency, not an oversight to silently fix.
 - **Accessibility baseline** — a HIG update sometimes raises the bar on something `ios-accessibility-audit` already checks (contrast, Dynamic Type, motion). Re-run that skill's checklist on a screen being touched for OS adoption anyway — one pass, not two separate audits.
 
+### 3a. What changed in the iOS 27 cycle (as of October 2026)
+
+Additive to the checks above; for build breaks and required changes, use `ios-sdk-upgrade`.
+
+- **Design:** refreshed materials, refined typography, and updated tab and navigation bars.
+  Re-check custom bars and backgrounds next to system ones.
+- **Menus:** on iPadOS 27 the menu bar, and on macOS 27 context menus too, show a reduced
+  set of item images by default. Review the HIG for which items should keep images; use
+  `labelStyle(.titleAndIcon)` in SwiftUI or `preferredImageVisibility` in UIKit to opt in.
+- **Status bar:** SwiftUI can set it with `.toolbarColorScheme(_:for: .statusBar)` and hide
+  it with `.toolbarVisibility(_:for: .statusBar)`.
+- **Search:** with center search-bar placement, `UISearchController`'s scope bar now sits
+  inline beside the search field.
+- **Navigation bar minimization:** `UINavigationItem.navigationBarMinimization` replaces
+  `barMinimizeBehavior` and `barMinimizationSafeAreaAdjustment`.
+- **SwiftUI:** `AsyncImage` now honours HTTP caching; document apps get `ReadableDocument`
+  and `WritableDocument`; pickers gain `TabsPickerStyle`.
+- **Apple Intelligence on screen:** see `ios-app-intents-siri` (View Annotations) and
+  `ios-coreml-apple-intelligence`.
+
 ## 4. Gating new APIs for a range of supported OS versions
 
 ```swift

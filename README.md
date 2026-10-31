@@ -1,9 +1,9 @@
 # iOS Claude Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-33-brightgreen)](#1-build--writing-a-feature)
+[![Skills](https://img.shields.io/badge/skills-37-brightgreen)](#1-build--writing-a-feature)
 
-A collection of 33 [Claude Code Skills](https://docs.claude.com/en/docs/claude-code/skills) for iOS/Swift development — lifecycle workflows (feature work, quality, review, shipping) plus skills for the core Apple frameworks nearly every real app touches (Swift concurrency, SwiftData, StoreKit, and more).
+A collection of 37 [Claude Code Skills](https://docs.claude.com/en/docs/claude-code/skills) for iOS/Swift development — lifecycle workflows (feature work, quality, review, shipping) plus skills for the core Apple frameworks nearly every real app touches (Swift concurrency, SwiftData, StoreKit, and more).
 
 ```
   BUILD ──▶ QUALITY ──▶ REVIEW ──▶ SHIP
@@ -30,6 +30,7 @@ Every tool below reads the same `SKILL.md` files — no per-tool content transla
 | **Gemini CLI** | `gemini skills install https://github.com/Sajidisrar/ios-claude-skills.git --path skills` | [docs/gemini-cli-setup.md](docs/gemini-cli-setup.md) |
 | **OpenAI Codex CLI** | `codex plugin marketplace add Sajidisrar/ios-claude-skills` then `codex plugin add ios-claude-skills@ios-claude-skills` | [docs/codex-setup.md](docs/codex-setup.md) |
 | **OpenCode** | Reads `skills/` natively — point it at a clone of this repo, no setup | — |
+| **Swift Package Manager** | Add the package, then `swift package --allow-writing-to-package-directory install-ios-skills` | [below](#swift-package-manager) |
 
 ## Install
 
@@ -47,6 +48,28 @@ curl -fsSL .../install.sh | bash -s -- --skill ios-bug-triage
 ```
 
 Run `install.sh --help` for the full flag list. After installing, restart your tool (or start a new session) so it picks up the new skills.
+
+### Swift Package Manager
+
+If your project is a Swift package, add this repo as a dependency and use its command plugin — it copies the skills into your package, with the same `--tool` and `--skill` options as `install.sh`:
+
+```swift
+// Package.swift
+dependencies: [
+    .package(url: "https://github.com/Sajidisrar/ios-claude-skills.git", from: "1.2.0"),
+],
+```
+
+```bash
+swift package --allow-writing-to-package-directory install-ios-skills
+swift package --allow-writing-to-package-directory install-ios-skills --tool cursor --skill ios-bug-triage
+```
+
+Run it from your package's root (where `Package.swift` is). It writes only inside your package, so there is no user-level scope; use `install.sh --scope user` for that. Apps managed only as an Xcode project, without a `Package.swift`, should use the plugin marketplace or `install.sh` instead.
+
+### Versions and updates
+
+Releases follow [Semantic Versioning](https://semver.org/) and are tagged `vX.Y.Z` — see [CHANGELOG.md](CHANGELOG.md) and [Releases](https://github.com/Sajidisrar/ios-claude-skills/releases). SwiftPM's `from:` picks up new minor and patch releases with `swift package update`; plugin installs update through your tool's plugin manager.
 
 ## How to use a skill
 
@@ -120,6 +143,7 @@ That field is Claude Code-specific; other tools ignore it and will auto-trigger 
 
 | Skill | Purpose | Triggers on |
 |---|---|---|
+| `ios-build-configuration` | Set up configurations, schemes and `.xcconfig` build variables per environment, and investigate configuration-caused build, signing or wrong-environment issues | Adding an environment or build variable, or a build/archive/launch fails for configuration reasons |
 | `ios-release-prep` | Prepare a release — version/build numbers, archive, TestFlight, release notes, pre-release checks | Cutting a release, bumping the version |
 | `ios-commit-and-pr` | Write commits and PR descriptions to a team's conventions | Committing, writing a commit message, or describing a PR |
 | `ios-precommit` | Developer pre-commit review of the current diff, with a commit/no-commit decision | Explicit `/ios-precommit`, before committing |
@@ -147,13 +171,17 @@ These are framework-scoped rather than lifecycle-stage-scoped — reach for the 
 | `ios-widgetkit-live-activities` | Widgets and Live Activities — timeline design, deep linking, push updates | Adding a widget, building a Live Activity |
 | `ios-push-and-background-tasks` | Push notifications and `BackgroundTasks` scheduling | Adding push notifications, scheduling background work |
 | `ios-latest-os-adoption` | Check a screen against current HIG and the newest OS's design language/APIs | A new iOS version shipped; auditing against current HIG |
+| `ios-sdk-upgrade` | Move to a new Xcode/iOS SDK (currently Xcode 27 / iOS 27) — host requirements, build breaks, required launch changes, deprecations, upload deadlines | Upgrading Xcode, or the app stops building/launching after an update |
+| `ios-app-intents-siri` | Expose content and actions to Siri, Spotlight, Shortcuts and Apple Intelligence with App Intents — entities, intents, schemas, View Annotations, testing | Adding Siri/Shortcuts/Spotlight support, migrating from SiriKit |
+| `ios-localization` | Localize with String Catalogs — localizable strings, plurals, formatting, RTL, agent translation with review, coverage | Adding a language, fixing untranslated or truncated strings |
 
 This category closes the "basic requirements" gap this repo had against comparable Apple-platform skill collections (Axiom, rshankras/claude-code-apple-skills, Prisma-Labs-Dev/apple-skills) — those are **framework-reference** packs (one skill per Apple framework); the 1–4 categories above are **workflow-process** (one skill per dev-lifecycle stage). Both matter; this repo now has both.
+
+**Next to Apple's own agent skills.** Xcode 27 ships Apple-authored agent skills (for example a SwiftUI specialist and security-settings audit) and lets Xcode's agents load plugins that contain skills. Those cover how to use Apple's APIs; this collection covers the workflow around them — scoping, testing, reviewing, configuring and shipping — and the two work side by side. iOS 27-specific guidance here is added alongside the existing advice for earlier iOS versions, never in place of it.
 
 ## Gaps — not yet covered
 
 - **CI/CD** — no skill for pipeline config (Fastlane, GitHub Actions/Bitrise/Xcode Cloud lanes).
-- **Localization/i18n** — no skill for adding strings, checking translation coverage, or RTL layout.
 - **PR *review*** — `ios-precommit`/`ios-secure-review` cover reviewing your *own* diff before committing; nothing covers reviewing a teammate's already-open PR.
 - **Incident/hotfix path** — `ios-release-prep` assumes a normal cadence; no fast-path skill for "ship a one-line fix to production now."
 - **Extensions beyond widgets** — App Clips, watchOS companions, notification service extensions aren't covered.
@@ -169,9 +197,14 @@ ios-claude-skills/
 ├── .codex-plugin/        # Codex plugin manifest
 ├── .agents/plugins/      # Codex-ecosystem marketplace entry
 ├── plugin.json           # generic fallback for other plugin-aware hosts
-├── skills/               # all 33 skills, flat — skills/<name>/SKILL.md
+├── skills/               # all 37 skills, flat — skills/<name>/SKILL.md
 ├── docs/                 # per-tool setup guides
 ├── install.sh            # curl | bash installer
+├── Package.swift         # SwiftPM manifest for the install-ios-skills command plugin
+├── Plugins/              # the plugin's source
+├── scripts/              # bump-version.sh
+├── .github/workflows/    # release.yml — publishes a GitHub Release for each vX.Y.Z tag
+├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── AGENTS.md             # meta-instructions for contributors to this repo
 └── README.md

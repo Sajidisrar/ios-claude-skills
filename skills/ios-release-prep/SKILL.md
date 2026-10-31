@@ -64,6 +64,21 @@ to whatever the last debug session used.
 - [ ] Privacy manifest and App Store privacy answers still accurate if data
       handling changed.
 
+### 3a. Platform requirements for this release
+
+Check Apple's *Upcoming Requirements* page (developer.apple.com/news/upcoming-requirements)
+and the current *App Review Guidelines* before every release — both change during the year.
+As of October 2026:
+
+- [ ] From April 2027, iOS and iPadOS uploads must be built with the iOS 27 SDK or later
+      (see `ios-sdk-upgrade`). Builds with the iOS 27 SDK must include a launch screen and
+      adopt the scene-based life cycle.
+- [ ] App Review tightened its rules on low-quality and minimal-functionality apps in
+      June 2026, and the guidelines were revised again in October 2026. Re-read the
+      sections your app touches (payments, sign-in, user-generated content, AI features).
+- [ ] The build configuration and scheme are the ones you think they are
+      (`ios-build-configuration` if anything looks off).
+
 ## 4. Archive and distribute
 
 ```bash
