@@ -16,15 +16,35 @@ TOOL="claude"
 SCOPE="project"
 ONLY_SKILL=""
 
+# Inlined rather than read back from "$0": under `curl | bash`, $0 is "bash",
+# not this file.
 usage() {
-  sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
+  cat <<'EOF'
+Install ios-claude-skills into a Claude Code / Cursor / Copilot / Gemini CLI project or user directory.
+Usage:
+  curl -fsSL https://raw.githubusercontent.com/Sajidisrar/ios-claude-skills/main/install.sh | bash -s -- [options]
+
+Options:
+  --tool <claude|cursor|copilot|gemini|codex>   Target tool (default: claude)
+  --scope <project|user>                        Install location (default: project)
+  --skill <name>                                Install only this one skill (default: all)
+  -h, --help                                     Show this help
+EOF
+}
+
+need_value() {
+  if [ $# -lt 2 ] || [ -z "$2" ]; then
+    echo "Option $1 requires a value." >&2
+    usage >&2
+    exit 1
+  fi
 }
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --tool) TOOL="$2"; shift 2 ;;
-    --scope) SCOPE="$2"; shift 2 ;;
-    --skill) ONLY_SKILL="$2"; shift 2 ;;
+    --tool) need_value "$@"; TOOL="$2"; shift 2 ;;
+    --scope) need_value "$@"; SCOPE="$2"; shift 2 ;;
+    --skill) need_value "$@"; ONLY_SKILL="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
   esac
@@ -63,10 +83,16 @@ else
 fi
 
 # Resolve the source: a local clone this script lives in, or fetch a fresh one.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
+# Only trust SCRIPT_DIR when the script was run from a real file. Under
+# `curl | bash` there is no file, dirname falls back to ".", and the current
+# directory's unrelated skills/ folder would be installed instead.
+SCRIPT_DIR=""
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
+fi
 CLEANUP_DIR=""
 
-if [ -n "$SCRIPT_DIR" ] && [ -d "$SCRIPT_DIR/skills" ]; then
+if [ -n "$SCRIPT_DIR" ] && [ -d "$SCRIPT_DIR/skills" ] && [ -f "$SCRIPT_DIR/.claude-plugin/plugin.json" ]; then
   SOURCE="$SCRIPT_DIR/skills"
 else
   TMP_DIR="$(mktemp -d)"
@@ -77,7 +103,11 @@ else
 fi
 
 cleanup() {
-  [ -n "$CLEANUP_DIR" ] && rm -rf "$CLEANUP_DIR"
+  # An `if`, not `[ ... ] && rm`: a false test as the trap's last command
+  # would become the script's exit status, failing every local-clone install.
+  if [ -n "$CLEANUP_DIR" ]; then
+    rm -rf "$CLEANUP_DIR"
+  fi
 }
 trap cleanup EXIT
 

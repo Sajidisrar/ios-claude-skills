@@ -20,7 +20,7 @@ codex plugin add ios-claude-skills@ios-claude-skills
 
 ## Usage
 
-Invoke a skill directly with `@` — e.g. `@ios-bug-triage`, `@ios-storekit-subscriptions` — or just describe the task and let Codex pick the right skill from the `name`/`description` of all 29.
+Invoke a skill directly with `@` — e.g. `@ios-bug-triage`, `@ios-storekit-subscriptions` — or just describe the task and let Codex pick the right skill from the `name`/`description` of all 33.
 
 ## A caveat: `disable-model-invocation`
 

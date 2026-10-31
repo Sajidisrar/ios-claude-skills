@@ -1,6 +1,6 @@
 {
   "name": "ios-claude-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Claude Code skills for iOS/Swift development — lifecycle workflows (build, quality, review, ship) plus Apple-framework skills (Swift concurrency, SwiftData, StoreKit, and more).",
   "author": {
     "name": "Sajid Israr"

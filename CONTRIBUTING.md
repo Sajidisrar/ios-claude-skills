@@ -6,7 +6,7 @@ PRs that add a missing skill, fix a stale instruction, extend tool support, or g
 
 ## Adding a new skill
 
-Every skill lives at `skills/<kebab-case-name>/SKILL.md` and follows the same anatomy as the existing 29:
+Every skill lives at `skills/<kebab-case-name>/SKILL.md` and follows the same anatomy as the existing 33:
 
 1. **Frontmatter**: `name` (matches the directory name) and `description` — the description should state both *what* the skill does and *when* to use it, since that's what every supported tool uses for auto-discovery. Add `disable-model-invocation: true` only if the skill should run exclusively on an explicit invocation (see `ios-precommit`/`ios-commit` for the pattern — this field is Claude Code-specific; other tools ignore it, see the per-tool docs under `docs/`).
 2. **Body**: process-oriented instructions, not a reference dump. Put supporting detail that would bloat the main file into `references/*.md` and link to it.

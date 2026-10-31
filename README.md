@@ -1,9 +1,9 @@
 # iOS Claude Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-29-brightgreen)](#1-build--writing-a-feature)
+[![Skills](https://img.shields.io/badge/skills-33-brightgreen)](#1-build--writing-a-feature)
 
-A collection of 29 [Claude Code Skills](https://docs.claude.com/en/docs/claude-code/skills) for iOS/Swift development — lifecycle workflows (feature work, quality, review, shipping) plus skills for the core Apple frameworks nearly every real app touches (Swift concurrency, SwiftData, StoreKit, and more).
+A collection of 33 [Claude Code Skills](https://docs.claude.com/en/docs/claude-code/skills) for iOS/Swift development — lifecycle workflows (feature work, quality, review, shipping) plus skills for the core Apple frameworks nearly every real app touches (Swift concurrency, SwiftData, StoreKit, and more).
 
 ```
   BUILD ──▶ QUALITY ──▶ REVIEW ──▶ SHIP
@@ -93,6 +93,9 @@ That field is Claude Code-specific; other tools ignore it and will auto-trigger 
 | `ios-api-contract-migration` | Adapt the app to a changed backend contract (renamed/removed fields, new error shapes, versioned rollout) | The API changed — renamed fields, new error shape, a version bump |
 | `ios-swiftui-screen` | Build or change a SwiftUI screen — loading/empty/error states, forms, navigation, accessibility | Adding/changing a screen, or fixing loading/empty/error states |
 | `ios-offline-write` | Make create/update/delete work offline — outbox queueing, optimistic records, replay on reconnect | A save must survive a dropped connection |
+| `ios-knowledge-base` | Keep a compact, git-tracked map of the app's structure, decisions and conventions, refreshed from `git diff`, so agents skip re-exploring the code (fewer tokens) | Starting on an unfamiliar codebase, mapping/documenting the app, KB stale after merges |
+| `ios-port-to-android` | Port an iOS app to native Android (Kotlin/Compose) — inventory, platform mapping, gap list, vertical slices, parity check | Bringing an iOS app to Android, finding an Android equivalent |
+| `ios-port-from-android` | Port an Android app to native iOS (Swift/SwiftUI) — inventory, platform mapping, App Review limits, vertical slices, parity check | Bringing an Android app to iOS, finding an iOS equivalent |
 
 ## 2. Quality — making sure it actually works
 
@@ -103,6 +106,7 @@ That field is Claude Code-specific; other tools ignore it and will auto-trigger 
 | `ios-concurrency-audit` | Audit/fix Swift Concurrency issues — actor isolation, Sendable, cancellation, data races | A crash/warning involves threading, or reviewing async code |
 | `ios-performance-tuning` | Diagnose and fix performance problems — slow launch, jank, redundant network calls, memory growth | A screen feels slow, stutters, or a request fires repeatedly |
 | `ios-accessibility-audit` | Audit/fix accessibility — VoiceOver, Dynamic Type, contrast, hit targets, focus order | Checking/improving accessibility, or a pre-release screen review |
+| `ios-design-fix` | Compare screens to the design source (prototype, Figma export, screenshots), fix differences in SwiftUI, verify on iPhone and iPad simulators | Matching screens to the design, or fixing and verifying UI bugs from tickets |
 
 ## 3. Review — judgment calls before it ships
 
@@ -165,7 +169,7 @@ ios-claude-skills/
 ├── .codex-plugin/        # Codex plugin manifest
 ├── .agents/plugins/      # Codex-ecosystem marketplace entry
 ├── plugin.json           # generic fallback for other plugin-aware hosts
-├── skills/               # all 29 skills, flat — skills/<name>/SKILL.md
+├── skills/               # all 33 skills, flat — skills/<name>/SKILL.md
 ├── docs/                 # per-tool setup guides
 ├── install.sh            # curl | bash installer
 ├── CONTRIBUTING.md
